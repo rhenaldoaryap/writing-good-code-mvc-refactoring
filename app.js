@@ -8,6 +8,7 @@ const sessionConfig = require("./config/session");
 const db = require("./data/database");
 const authRoutes = require("./routes/auth");
 const blogRoutes = require("./routes/blog");
+const authMiddleware = require("./middlewares/auth-middleware");
 
 // calling the createSessionStore function from config folder/session.js and passing session package as argument.
 const mongoDbSessionStore = sessionConfig.createSessionStore(session);
@@ -23,18 +24,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(session(sessionConfig.createSessionConfig(mongoDbSessionStore)));
 app.use(csrf());
 
-app.use(async function (req, res, next) {
-  const user = req.session.user;
-  const isAuth = req.session.isAuthenticated;
-
-  if (!user || !isAuth) {
-    return next();
-  }
-
-  res.locals.isAuth = isAuth;
-
-  next();
-});
+// not executing our custom middleware, we let the package (express) execute it for us when the request coming in the future
+// that means the res.locals
+app.use(authMiddleware);
 
 app.use(blogRoutes);
 app.use(authRoutes);
