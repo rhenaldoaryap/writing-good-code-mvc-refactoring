@@ -57,6 +57,20 @@ class Post {
   //       { $set: { title: enteredTitle, content: enteredContent } }
   //     );
   //   }
+
+  async delete() {
+    if (!this.id) {
+      // we can throw an error and just return it
+      // simply for preventing deleting the post when we not have the id.
+      return;
+    }
+
+    const result = await db
+      .getDb()
+      .collection("posts")
+      .deleteOne({ _id: this.id });
+    return result;
+  }
 }
 
 module.exports = Post;

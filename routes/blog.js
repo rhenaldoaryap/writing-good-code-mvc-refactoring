@@ -126,8 +126,13 @@ router.post("/posts/:id/edit", async function (req, res) {
 });
 
 router.post("/posts/:id/delete", async function (req, res) {
-  const postId = new ObjectId(req.params.id);
-  await db.getDb().collection("posts").deleteOne({ _id: postId });
+  // why we give the empty string argument or null?.
+  // because based on the constructor where expected three parameteres init, we have to define three arguments too when we calling the constructor method here.
+  // and we not interested for the title and the content, but we only interest with the ID for deleting the post.
+  // so we defining the empty string then
+  // const post = new Post("", "", req.params.id);
+  const post = new Post(null, null, req.params.id);
+  await post.delete();
 
   res.redirect("/admin");
 });
