@@ -2,6 +2,7 @@ const express = require("express");
 const mongodb = require("mongodb");
 
 const db = require("../data/database");
+const Post = require("../models/post");
 
 const ObjectId = mongodb.ObjectId;
 const router = express.Router();
@@ -57,12 +58,15 @@ router.post("/posts", async function (req, res) {
     return; // or return res.redirect('/admin'); => Has the same effect
   }
 
-  const newPost = {
-    title: enteredTitle,
-    content: enteredContent,
-  };
-
-  await db.getDb().collection("posts").insertOne(newPost);
+  // Post class needs actual values (enteredTitle, enteredContent), id can be omit because when first time creating a post, that will have no id then.
+  // expected parameter (which turn to be argument, because we call this constructor).
+  const post = new Post(enteredTitle, enteredContent);
+  // calling the save method.
+  // await the save method, to ensure we'll redirect to admin page after the post was saved.
+  // doesn't even make sense if we redirect to admin page before the actual post was saved and we couldn't see the newer post then.
+  // and why we await the save() method here because we define async function at posts.js
+  // by default, all async function will return a promise automatically.
+  await post.save();
 
   res.redirect("/admin");
 });
