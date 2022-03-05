@@ -59,8 +59,19 @@ async function createPost(req, res) {
   res.redirect("/admin");
 }
 
-async function getSinglePost(req, res) {
-  const post = new Post(null, null, req.params.id);
+async function getSinglePost(req, res, next) {
+  let post;
+  // do try-catch to throw an error if user type the ID that doesn't exist.
+  // and we throw our own error not using default error by nodejs
+  try {
+    post = new Post(null, null, req.params.id);
+  } catch (error) {
+    // throw an error like this (this will render 500 page)
+    // next(error);
+    // return;
+    // or 404 page, up to us which one we want to use
+    return res.status(404).render("404");
+  }
   await post.fetch();
 
   if (!post.title || !post.content) {
