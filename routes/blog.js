@@ -1,10 +1,14 @@
 const express = require("express");
 
 const blogControllers = require("../controllers/post-controller");
+// registering our custom protection routes
+const guardRoutes = require("../middlewares/auth-protection-middleware");
 
 const router = express.Router();
 
 router.get("/", blogControllers.getHome);
+
+router.use(guardRoutes);
 
 router.get("/admin", blogControllers.getAdmin);
 

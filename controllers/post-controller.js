@@ -7,9 +7,8 @@ function getHome(req, res) {
 }
 
 async function getAdmin(req, res) {
-  if (!res.locals.isAuth) {
-    return res.status(401).render("401");
-  }
+  // protected by our custom middleware
+  // check blog routes at line 11
 
   // calling the fetchAll() static method
   // when using static method, we don't need the new keyword anymore

@@ -134,10 +134,15 @@ function logout(req, res) {
   res.redirect("/");
 }
 
+function get401(req, res) {
+  res.status(401).render("401");
+}
+
 module.exports = {
   getSignUp: getSignUp,
   getLogin: getLogin,
   signup: signup,
   login: login,
   logout: logout,
+  get401: get401,
 };
